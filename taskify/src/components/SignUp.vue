@@ -13,7 +13,7 @@ const router = useRouter()
 const handleSignIn = async () => {
   error.value = null
   try {
-    console.log('handleSignIn triggered') // Para debug
+    console.log('handleSignIn triggered') //compruebo en consola
     await userStore.signIn(email.value, password.value)
     router.push('/dashboard') // redirige al dashboard después del login
   } catch (err) {
