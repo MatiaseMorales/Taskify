@@ -15,11 +15,12 @@ import AppNav from './AppNav.vue'
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #f5f5f5;
+  background-color: #a9a7a7;
+  
 }
 
 .logo {
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 2.2rem;
 }
 </style>

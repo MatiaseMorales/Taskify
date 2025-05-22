@@ -67,27 +67,30 @@ setTimeout(() => {
     </div>
 
    
-
+<div class="form-actions">
     <button @click="addTask">Agregar</button>
-
+</div>
    <p :class="{ error: error, success: success }">{{ error || success || '\u00A0' }}</p>
   </div>
 </template>
 
 <style scoped>
+
 .form-container {
   max-width: 500px;
   margin: 1rem auto;
   padding: 1rem;
-  background: #fafafa;
+  background: #f2f2e7;
   border: 1px solid #ddd;
   border-radius: 8px;
 }
+
 
 .form-container h2 {
  
   margin-top: 10px;
   margin-bottom: 15px;
+  text-align: center;
   
 }
 
@@ -123,11 +126,25 @@ setTimeout(() => {
 button {
   padding: 0.5rem 1rem;
   font-weight: bold;
-  background-color: #4caf50;
+  background-color: #80b1a1;
   color: white;
   border: none;
   border-radius: 4px;
+  margin-right: 0.5rem;
 }
+
+button:hover {
+  background-color: #aab1af;
+}
+
+
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+
 
 .error {
   color: red;
@@ -135,6 +152,6 @@ button {
 }
 
 .success {
-  color: green;
+  color: rgb(127, 143, 127);
 }
 </style>

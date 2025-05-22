@@ -40,6 +40,15 @@ const deleteTask = async (taskId) => {
   if (!error) fetchTasks()
 }
 
+const markAsIncomplete = async (taskId) => {
+  const { error } = await supabase
+    .from('tasks')
+    .update({ completed: false })
+    .eq('id', taskId)
+
+  if (!error) fetchTasks()
+}
+
 
 const pendingTasks = computed(() => tasks.value.filter(t => !t.completed))
 const completedTasks = computed(() => tasks.value.filter(t => t.completed))
@@ -48,7 +57,7 @@ onMounted(fetchTasks)
 </script>
 
 <template>
-  <div>
+  <div class="dashboard">
     <AppHeader />
     <main>
       <NewTask @task-added="fetchTasks" />
@@ -63,6 +72,8 @@ onMounted(fetchTasks)
             :task="task"
             @complete="markAsCompleted"
             @delete="deleteTask"
+           
+
           />
         </div>
       </section>
@@ -77,6 +88,7 @@ onMounted(fetchTasks)
             :task="task"
             :readonly="true"
             @delete="deleteTask"
+             @incomplete="markAsIncomplete"
           />
         </div>
       </section>
@@ -86,6 +98,12 @@ onMounted(fetchTasks)
 
 
 <style scoped>
+
+
+.dashboard{
+  background-color: rgb(215, 214, 211);
+}
+
 .tasks-section {
   margin: 2rem 0;
 }
