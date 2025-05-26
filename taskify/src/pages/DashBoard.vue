@@ -2,29 +2,34 @@
 import AppHeader from '../components/AppHeader.vue'
 import NewTask from '../components/NewTask.vue'
 import TaskItem from '../components/TaskItem.vue'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { supabase } from '../supabase'
 import { useUserStore } from '../store/user'
 
 const tasks = ref([])
-const activeTab = ref('pending') 
+const activeTab = ref('pending')
 const userStore = useUserStore()
+const sortBy = ref('due_date')
+const sortAsc = ref(true)
+const toggleSortDirection = () => {
+  sortAsc.value = !sortAsc.value
+  fetchTasks()
+}
 
 const fetchTasks = async () => {
   const { data, error } = await supabase
     .from('tasks')
     .select('*')
     .eq('user_id', userStore.user.id)
-    .order('created_at', { ascending: false })
+    .order(sortBy.value, { ascending: sortAsc.value })
 
   if (!error) tasks.value = data
 }
 
+watch([sortBy, sortAsc], fetchTasks)
+
 const markAsCompleted = async (taskId) => {
-  const { error } = await supabase
-    .from('tasks')
-    .update({ completed: true })
-    .eq('id', taskId)
+  const { error } = await supabase.from('tasks').update({ completed: true }).eq('id', taskId)
 
   if (!error) fetchTasks()
 }
@@ -34,7 +39,7 @@ const updateTask = async (updatedTask) => {
     .from('tasks')
     .update({
       title: updatedTask.title,
-      description: updatedTask.description
+      description: updatedTask.description,
     })
     .eq('id', updatedTask.id)
 
@@ -49,30 +54,21 @@ const deleteTask = async (taskId) => {
   const confirmDelete = window.confirm('¿Estás seguro de que quieres eliminar esta tarea?')
   if (!confirmDelete) return
 
-  const { error } = await supabase
-    .from('tasks')
-    .delete()
-    .eq('id', taskId)
+  const { error } = await supabase.from('tasks').delete().eq('id', taskId)
 
   if (!error) fetchTasks()
 }
 
 const markAsIncomplete = async (taskId) => {
-  const { error } = await supabase
-    .from('tasks')
-    .update({ completed: false })
-    .eq('id', taskId)
+  const { error } = await supabase.from('tasks').update({ completed: false }).eq('id', taskId)
 
   if (!error) fetchTasks()
 }
 
-const pendingTasks = computed(() => tasks.value.filter(t => !t.completed))
-const completedTasks = computed(() => tasks.value.filter(t => t.completed))
+const pendingTasks = computed(() => tasks.value.filter((t) => !t.completed))
+const completedTasks = computed(() => tasks.value.filter((t) => t.completed))
 
 onMounted(fetchTasks)
-
-
-
 </script>
 
 <template>
@@ -81,25 +77,32 @@ onMounted(fetchTasks)
     <main>
       <NewTask @task-added="fetchTasks" />
 
-      
       <div class="tabs">
-        <button
-          :class="{ active: activeTab === 'pending' }"
-          @click="activeTab = 'pending'"
-        >
+        <button :class="{ active: activeTab === 'pending' }" @click="activeTab = 'pending'">
           Tareas Pendientes
         </button>
-        <button
-          :class="{ active: activeTab === 'completed' }"
-          @click="activeTab = 'completed'"
-        >
+        <button :class="{ active: activeTab === 'completed' }" @click="activeTab = 'completed'">
           Tareas Completadas
         </button>
       </div>
 
-      
       <section v-if="activeTab === 'pending'" class="tasks-section">
         <h2>Tareas Pendientes</h2>
+
+        <div class="sort-selector">
+          <label for="sort">Ordenar por:</label>
+          <select id="sort" v-model="sortBy" @change="fetchTasks">
+            <option value="due_date">Fecha límite (más cercana)</option>
+            <option value="created_at">Fecha de creación (más reciente)</option>
+          </select>
+          <button
+            @click="toggleSortDirection"
+            class="sort-toggle-btn"
+            :title="sortAsc ? 'Ascendente' : 'Descendente'"
+          >
+            <span v-html="sortAsc ? '&#x21E7;' : '&#x21E9;'"></span>
+          </button>
+        </div>
         <div v-if="pendingTasks.length === 0" class="no-tasks">No hay tareas pendientes.</div>
         <div v-else class="tasks-container">
           <TaskItem
@@ -115,6 +118,20 @@ onMounted(fetchTasks)
 
       <section v-if="activeTab === 'completed'" class="tasks-section">
         <h2>Tareas Completadas</h2>
+        <div class="sort-selector">
+          <label for="sort">Ordenar por:</label>
+          <select id="sort" v-model="sortBy" @change="fetchTasks">
+            <option value="due_date">Fecha límite (más cercana)</option>
+            <option value="created_at">Fecha de creación (más reciente)</option>
+          </select>
+          <button
+            @click="toggleSortDirection"
+            class="sort-toggle-btn"
+            :title="sortAsc ? 'Ascendente' : 'Descendente'"
+          >
+            <span v-html="sortAsc ? '&#x21E7;' : '&#x21E9;'"></span>
+          </button>
+        </div>
         <div v-if="completedTasks.length === 0" class="no-tasks">No hay tareas completadas.</div>
         <div v-else class="tasks-container">
           <TaskItem
@@ -136,12 +153,11 @@ onMounted(fetchTasks)
   background-color: rgb(215, 214, 211);
 }
 
-
 .tabs {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin: 2rem 0 1rem;
+  margin: 2rem 0 0.5rem;
 }
 
 .tabs button {
@@ -165,7 +181,6 @@ onMounted(fetchTasks)
   border-bottom: 2px solid white;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
 }
-
 
 .tasks-section {
   background-color: white;
@@ -191,5 +206,34 @@ onMounted(fetchTasks)
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.sort-selector {
+  width: 53%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.sort-selector select {
+  width: 42%;
+  padding: 0rem;
+  font-size: 0.8rem;
+}
+
+.sort-toggle-btn {
+  font-size: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sort-toggle-btn:hover {
+  background-color: #e0e0e0;
 }
 </style>

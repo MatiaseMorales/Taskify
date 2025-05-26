@@ -6,6 +6,8 @@ const emit = defineEmits(['task-added'])
 
 const title = ref('')
 const description = ref('')
+const dueDate = ref('')
+
 
 const error = ref(null)
 const success = ref(null)
@@ -26,13 +28,13 @@ const addTask = async () => {
   }
 
   const { error: insertError } = await supabase.from('tasks').insert([
-    {
-      title: title.value,
-      description: description.value,
-     
-      user_id: user.id
-    }
-  ])
+  {
+    title: title.value,
+    description: description.value,
+    due_date: dueDate.value ? new Date(dueDate.value).toISOString() : null,
+    user_id: user.id
+  }
+])
 
   if (insertError) {
     error.value = insertError.message
@@ -42,6 +44,8 @@ const addTask = async () => {
   success.value = 'Tarea agregada exitosamente.'
   title.value = ''
   description.value = ''
+  dueDate.value = ''
+
  
 
   emit('task-added')
@@ -65,6 +69,11 @@ setTimeout(() => {
       <label>Descripción</label>
       <textarea v-model="description" placeholder="Descripción (opcional)"></textarea>
     </div>
+    <div class="form-group">
+  <label>Fecha y hora límite</label>
+  <input v-model="dueDate" type="datetime-local" />
+</div>
+
 
    
 <div class="form-actions">
@@ -113,6 +122,18 @@ setTimeout(() => {
   font-size: 1rem;
   font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif ;
 }
+
+.form-group input[type="datetime-local"] {
+  margin-top: 5px;
+  width: 97%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+
+
+
 .form-group textarea {
   margin-top: 5px;
   width: 97%;

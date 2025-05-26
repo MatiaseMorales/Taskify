@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps({
   task: Object,
@@ -19,17 +20,32 @@ const saveEdit = () => {
   })
   isEditing.value = false
 }
+
+
+
+const formattedDueDate = computed(() => {
+  if (!props.task.due_date) return ''
+  const date = new Date(props.task.due_date)
+  return date.toLocaleString() 
+})
+
 </script>
 
 <template>
   <div class="task-card">
     <div v-if="isEditing">
       <input v-model="editedTitle" placeholder="Título" />
-      <textarea v-model="editedDescription" placeholder="Descripción" />
+      <textarea v-model="editedDescription" placeholder="Descripción"></textarea>
+
     </div>
     <div v-else>
       <h3>{{ task.title }}</h3>
       <p>{{ task.description || 'Sin descripción.' }}</p>
+      <p v-if="task.due_date" class="due-date">
+  🕒 Límite: {{ formattedDueDate }}
+</p>
+
+      
     </div>
 
     <div class="actions" v-if="!readonly">
@@ -146,6 +162,9 @@ background-color: rgb(99, 145, 99);
   border: 1px solid #ccc;
   border-radius: 6px;
 }
+
+
+
 
 @media (max-width: 768px) {
   .actions,
