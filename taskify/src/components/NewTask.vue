@@ -77,11 +77,11 @@ setTimeout(() => {
 <style scoped>
 
 .form-container {
-  max-width: 500px;
-  margin: 1rem auto;
-  padding: 1rem;
-  background: #f2f2e7;
-  border: 1px solid #ddd;
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 1.5rem;
+  background-color: #f5f6fa;
+  border: 1px solid #ccc;
   border-radius: 8px;
 }
 
@@ -91,6 +91,8 @@ setTimeout(() => {
   margin-top: 10px;
   margin-bottom: 15px;
   text-align: center;
+  color: #2c3e50;
+  font-size: 2rem;
   
 }
 
@@ -106,14 +108,14 @@ setTimeout(() => {
 
 .form-group input {
   margin-top: 5px;
-  width: 95%;
+  width: 97%;
   padding: 0.5rem;
   font-size: 1rem;
   font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif ;
 }
 .form-group textarea {
   margin-top: 5px;
-  width: 95%;
+  width: 97%;
   height: 70px;
   padding: 0.5rem;
   font-size: 1rem;
@@ -126,15 +128,15 @@ setTimeout(() => {
 button {
   padding: 0.5rem 1rem;
   font-weight: bold;
-  background-color: #80b1a1;
+  background-color: #2c3e50;
   color: white;
   border: none;
   border-radius: 4px;
-  margin-right: 0.5rem;
+  margin-right: rem;
 }
 
 button:hover {
-  background-color: #aab1af;
+  background-color: #34495e;
 }
 
 
@@ -154,4 +156,18 @@ button:hover {
 .success {
   color: rgb(127, 143, 127);
 }
+
+
+
+@media (max-width: 768px) {
+  .form-actions {
+    justify-content: center;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
+
 </style>

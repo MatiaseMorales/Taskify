@@ -33,4 +33,20 @@ const logout = async () => {
   padding: 0;
   margin: 0;
 }
+
+.nav button {
+  background-color: #9494a7;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.nav button:hover {
+  background-color: #aeaec4;
+}
 </style>
+

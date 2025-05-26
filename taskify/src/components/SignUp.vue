@@ -1,37 +1,94 @@
+<!-- SignUp.vue -->
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useUserStore } from '../store/user'
+import { supabase } from '../supabase'
 
 const email = ref('')
 const password = ref('')
+const confirmPassword = ref('')
 const error = ref(null)
+const success = ref(null)
 
-const userStore = useUserStore()
-const router = useRouter()
-
-const handleSignIn = async () => {
+const handleSignUp = async () => {
   error.value = null
-  try {
-    console.log('handleSignIn triggered') //compruebo en consola
-    await userStore.signIn(email.value, password.value)
-    router.push('/dashboard') // redirige al dashboard después del login
-  } catch (err) {
-    error.value = err.message || 'Error al iniciar sesión'
+  success.value = null
+
+  if (password.value !== confirmPassword.value) {
+    error.value = 'Las contraseñas no coinciden.'
+    return
+  }
+
+  const { error: signUpError } = await supabase.auth.signUp({
+    email: email.value,
+    password: password.value
+  })
+
+  if (signUpError) {
+    error.value = signUpError.message
+  } else {
+    success.value = 'Registrado correctamente. Revisá tu email para confirmar.'
+    email.value = ''
+    password.value = ''
+    confirmPassword.value = ''
   }
 }
 </script>
 
 <template>
   <div>
-    <h2>Iniciar sesión</h2>
-    <form @submit.prevent="handleSignIn">
+    <h2>Registrarse</h2>
+    <form @submit.prevent="handleSignUp">
       <input v-model="email" type="email" placeholder="Email" required />
       <input v-model="password" type="password" placeholder="Contraseña" required />
-      <button type="submit">Entrar</button>
+      <input v-model="confirmPassword" type="password" placeholder="Confirmar contraseña" required />
+      <button type="submit">Registrarse</button>
     </form>
     <p v-if="error" style="color: red; margin-top: 10px;">{{ error }}</p>
+    <p v-if="success" style="color: green; margin-top: 10px;">{{ success }}</p>
   </div>
 </template>
 
- <style scoped></style>
+
+
+<style scoped>
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+button {
+  padding: 0.6rem;
+  background-color: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #34495e;
+}
+
+p {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+p.error {
+  color: red;
+}
+
+p.success {
+  color: green;
+}
+</style>
