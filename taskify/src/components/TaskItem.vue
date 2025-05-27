@@ -70,6 +70,10 @@ const formattedDueDate = computed(() => {
 
 
 <style scoped>
+
+*{
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;}
+  
 .task-card {
   max-width: 90%;
   
@@ -84,12 +88,14 @@ const formattedDueDate = computed(() => {
   margin: 0;
   font-size: 1.4rem;
   color: #2c3e50;
+ 
 }
 
 .task-card p {
   margin: 0.5rem 0 1rem;
   color: #555;
   font-size: 1rem;
+  
 }
 
 .actions,
@@ -161,6 +167,7 @@ background-color: rgb(99, 145, 99);
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 6px;
+  
 }
 
 

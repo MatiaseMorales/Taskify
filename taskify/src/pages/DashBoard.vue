@@ -3,50 +3,51 @@ import AppHeader from '../components/AppHeader.vue'
 import NewTask from '../components/NewTask.vue'
 import TaskItem from '../components/TaskItem.vue'
 import { ref, computed, onMounted, watch } from 'vue'
-import { supabase } from '../supabase'
 import { useUserStore } from '../store/user'
+import AppFooter from '../components/AppFooter.vue'
+
+import {
+  fetchTasks as fetchTasksService,
+  markAsCompleted as markAsCompletedService,
+  updateTask as updateTaskService,
+  deleteTask as deleteTaskService,
+  markAsIncomplete as markAsIncompleteService,
+} from '../store/task.js'
 
 const tasks = ref([])
 const activeTab = ref('pending')
 const userStore = useUserStore()
 const sortBy = ref('due_date')
 const sortAsc = ref(true)
+
+const fetchTasks = async () => {
+  try {
+    tasks.value = await fetchTasksService(userStore.user.id, sortBy.value, sortAsc.value)
+  } catch (error) {
+    console.error('Error al obtener tareas:', error)
+  }
+}
+
 const toggleSortDirection = () => {
   sortAsc.value = !sortAsc.value
   fetchTasks()
 }
 
-const fetchTasks = async () => {
-  const { data, error } = await supabase
-    .from('tasks')
-    .select('*')
-    .eq('user_id', userStore.user.id)
-    .order(sortBy.value, { ascending: sortAsc.value })
-
-  if (!error) tasks.value = data
-}
-
-watch([sortBy, sortAsc], fetchTasks)
-
 const markAsCompleted = async (taskId) => {
-  const { error } = await supabase.from('tasks').update({ completed: true }).eq('id', taskId)
-
-  if (!error) fetchTasks()
+  try {
+    await markAsCompletedService(taskId)
+    fetchTasks()
+  } catch (error) {
+    console.error('Error al marcar como completada:', error)
+  }
 }
 
 const updateTask = async (updatedTask) => {
-  const { error } = await supabase
-    .from('tasks')
-    .update({
-      title: updatedTask.title,
-      description: updatedTask.description,
-    })
-    .eq('id', updatedTask.id)
-
-  if (error) {
-    console.error('Error al actualizar la tarea:', error.message)
-  } else {
+  try {
+    await updateTaskService(updatedTask)
     fetchTasks()
+  } catch (error) {
+    console.error('Error al actualizar tarea:', error)
   }
 }
 
@@ -54,26 +55,41 @@ const deleteTask = async (taskId) => {
   const confirmDelete = window.confirm('¿Estás seguro de que quieres eliminar esta tarea?')
   if (!confirmDelete) return
 
-  const { error } = await supabase.from('tasks').delete().eq('id', taskId)
-
-  if (!error) fetchTasks()
+  try {
+    await deleteTaskService(taskId)
+    fetchTasks()
+  } catch (error) {
+    console.error('Error al eliminar tarea:', error)
+  }
 }
 
 const markAsIncomplete = async (taskId) => {
-  const { error } = await supabase.from('tasks').update({ completed: false }).eq('id', taskId)
-
-  if (!error) fetchTasks()
+  try {
+    await markAsIncompleteService(taskId)
+    fetchTasks()
+  } catch (error) {
+    console.error('Error al marcar como incompleta:', error)
+  }
 }
 
 const pendingTasks = computed(() => tasks.value.filter((t) => !t.completed))
 const completedTasks = computed(() => tasks.value.filter((t) => t.completed))
 
 onMounted(fetchTasks)
+
+watch([sortBy, sortAsc], fetchTasks)
+
+const scrollToTasksSection = () => {
+  const section = document.querySelector('.tabs')
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+}
 </script>
 
 <template>
   <div class="dashboard">
-    <AppHeader />
+    <AppHeader @scrollToTasks="scrollToTasksSection" />
     <main>
       <NewTask @task-added="fetchTasks" />
 
@@ -103,6 +119,7 @@ onMounted(fetchTasks)
             <span v-html="sortAsc ? '&#x21E7;' : '&#x21E9;'"></span>
           </button>
         </div>
+
         <div v-if="pendingTasks.length === 0" class="no-tasks">No hay tareas pendientes.</div>
         <div v-else class="tasks-container">
           <TaskItem
@@ -118,6 +135,7 @@ onMounted(fetchTasks)
 
       <section v-if="activeTab === 'completed'" class="tasks-section">
         <h2>Tareas Completadas</h2>
+
         <div class="sort-selector">
           <label for="sort">Ordenar por:</label>
           <select id="sort" v-model="sortBy" @change="fetchTasks">
@@ -132,6 +150,7 @@ onMounted(fetchTasks)
             <span v-html="sortAsc ? '&#x21E7;' : '&#x21E9;'"></span>
           </button>
         </div>
+
         <div v-if="completedTasks.length === 0" class="no-tasks">No hay tareas completadas.</div>
         <div v-else class="tasks-container">
           <TaskItem
@@ -146,18 +165,27 @@ onMounted(fetchTasks)
       </section>
     </main>
   </div>
+    <AppFooter />
 </template>
 
+
+
 <style scoped>
+
+*{
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
 .dashboard {
   background-color: rgb(215, 214, 211);
+  padding-bottom: 1rem;
 }
 
 .tabs {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin: 2rem 0 0.5rem;
+  margin: 3rem 0 0.5rem;
 }
 
 .tabs button {
@@ -170,6 +198,7 @@ onMounted(fetchTasks)
   font-weight: bold;
   color: #2c3e50;
   transition: background-color 0.3s;
+  margin-top: 1rem;
 }
 
 .tabs button:hover {
@@ -237,3 +266,4 @@ onMounted(fetchTasks)
   background-color: #e0e0e0;
 }
 </style>
+

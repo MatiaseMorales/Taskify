@@ -9,9 +9,31 @@ const confirmPassword = ref('')
 const error = ref(null)
 const success = ref(null)
 
+const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
+
+const isStrongPassword = (password) => {
+  // Mínimo 8 caracteres, una mayúscula, una minúscula, un número
+  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+  return strongPasswordRegex.test(password)
+}
+
 const handleSignUp = async () => {
   error.value = null
   success.value = null
+
+  
+  if (!isValidEmail(email.value)) {
+    error.value = 'Por favor ingresá un correo válido.'
+    return
+  }
+
+if (!isStrongPassword(password.value)) {
+  error.value = 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.'
+  return
+}
 
   if (password.value !== confirmPassword.value) {
     error.value = 'Las contraseñas no coinciden.'
@@ -51,6 +73,12 @@ const handleSignUp = async () => {
 
 
 <style scoped>
+
+div h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  margin-top: 0.5rem;
+}
 form {
   display: flex;
   flex-direction: column;

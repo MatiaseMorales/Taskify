@@ -37,6 +37,12 @@ const handleSignIn = async () => {
 
 
 <style scoped>
+
+div h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  margin-top: 0.5rem;
+}
 form {
   display: flex;
   flex-direction: column;

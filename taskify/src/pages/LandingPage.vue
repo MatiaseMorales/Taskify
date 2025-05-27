@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import SignIn from '../components/SignIn.vue'
 import SignUp from '../components/SignUp.vue'
 import { supabase } from '../supabase'
+import AppFooter from '../components/AppFooter.vue'
 
 const showSignIn = ref(false)
 const showSignUp = ref(false)
@@ -86,13 +87,17 @@ const closeModals = () => {
       </div>
     </div>
   </div>
+  <AppFooter />
 </template>
 
 <style scoped>
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
 }
+
+*{
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;}
 
 .landing-container {
   min-height: 100vh;
@@ -101,13 +106,13 @@ body {
   justify-content: center;
   align-items: center;
   background-color: #f5f6fa;
-  padding: 1rem;
+  padding: 0rem;
   text-align: center;
 }
 
 h1 {
   font-size: 3.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.1rem;
   margin-top: 1rem;
   color: #2c3e50;
 }
@@ -161,7 +166,7 @@ p {
 
 .modal-content {
   background: #fff;
-  padding: 3.5rem;
+  padding: 5rem;
   border-radius: 12px;
   width: 90%;
   max-width: 400px;
@@ -217,6 +222,7 @@ p {
   width: 250px;
   height: auto;
   border-radius: 50%;
+
 }
 
 

@@ -85,6 +85,10 @@ setTimeout(() => {
 
 <style scoped>
 
+
+*{
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;}
+
 .form-container {
   max-width: 600px;
   margin: 3rem auto;
@@ -120,7 +124,7 @@ setTimeout(() => {
   width: 97%;
   padding: 0.5rem;
   font-size: 1rem;
-  font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif ;
+ 
 }
 
 .form-group input[type="datetime-local"] {
@@ -128,7 +132,7 @@ setTimeout(() => {
   width: 97%;
   padding: 0.5rem;
   font-size: 1rem;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  
 }
 
 
@@ -141,7 +145,7 @@ setTimeout(() => {
   padding: 0.5rem;
   font-size: 1rem;
   resize: none;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  
 }
 
 

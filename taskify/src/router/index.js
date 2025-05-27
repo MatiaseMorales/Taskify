@@ -24,7 +24,7 @@ router.beforeEach(async (to, from, next) => {
   const isAuthenticated = !!data.session
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    return next('/')  // Redirige al landing si no hay sesión
+    return next('/')  // Redirijo al landing si no hay sesión
   }
 
   next()
