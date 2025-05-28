@@ -37,7 +37,7 @@ Autenticación completa: Registro, inicio y cierre de sesión con manejo de erro
 
 Persistencia de sesión: Estado del usuario guardado automáticamente para mantener la sesión activa.
 
-CRUD de tareas: Crear, editar, eliminar y marcar tareas como completadas o pendientes.
+CRUD de tareas: Crear, leer, editar, eliminar y marcar tareas como completadas o pendientes.
 
 Ordenamiento dinámico: Listado de tareas ordenado por fecha u otros criterios.
 
