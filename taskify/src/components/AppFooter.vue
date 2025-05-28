@@ -1,6 +1,6 @@
 <template>
   <footer class="footer">
-    <p>© 2025 Matias Morales. </p>
+    <p>Taskify© 2025 Matias Morales.</p>
   </footer>
 </template>
 

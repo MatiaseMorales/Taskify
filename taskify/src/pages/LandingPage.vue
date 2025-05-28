@@ -94,6 +94,7 @@ const closeModals = () => {
 body {
   margin: 0;
   
+  
 }
 
 *{
@@ -229,6 +230,7 @@ p {
 @media (max-width: 768px) {
   .landing-container {
     padding: 2rem 1rem;
+    
   }
 
   h1 {
