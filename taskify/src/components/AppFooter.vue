@@ -1,11 +1,11 @@
 <template>
   <footer class="footer">
-    <p>© 2025 Matias Morales. Todos los derechos reservados.</p>
+    <p>© 2025 Matias Morales. </p>
   </footer>
 </template>
 
 <script setup>
-// No necesitas lógica especial aquí, solo template y estilos
+
 </script>
 
 <style scoped>
